@@ -1,7 +1,7 @@
 ---
 services:
   nautobot:
-    command: "nautobot-server runserver 0.0.0.0:8080"
+    command: "nautobot-server runserver 127.0.0.1:8080"
     ports:
       - "8080:8080"
     volumes:
@@ -17,3 +17,16 @@ services:
     volumes:
       - "../config/nautobot_config.py:/opt/nautobot/nautobot_config.py"
       - "../jobs:/opt/nautobot/jobs"
+  nginx:
+    ports:
+      - "443:443"
+    volumes:
+      - "../environments/nautobot.key:/etc/ssl/private/nautobot.key"
+      - "../environments/nautobot.crt:/etc/ssl/certs/nautobot.crt"
+      - "../config/nautobot.conf:/etc/nginx/sites-available/nautobot.conf"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail https://localhost || exit 1"]
+      interval: 30s       # Time between running the check (default 30s)
+      timeout: 5s         # Time before considering the check failed
+      retries: 3          # How many times to retry before marking as unhealthy
+      start_period: 10s   # Start period before running first healthcheck

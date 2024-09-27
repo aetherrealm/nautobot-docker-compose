@@ -1,6 +1,12 @@
 # Ansible Retry Files
 *.retry
 
+# Private files
+environments/creds.env
+environments/local.env
+environments/nautobot.crt
+environments/nautobot.key
+
 # Swap files
 *.swp
 
